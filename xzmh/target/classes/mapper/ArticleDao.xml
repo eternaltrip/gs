@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sofn.agriculture_gateway_tibet.dao.ArticleDao">
+
+
+	<sql id="Article_column">
+		aid, atitle, aAuthor, aSources, aPic, aContext, titleId, aEnableState, aEnableTop,aEnableHeadline , aHeadlineSort, createtime, updatetime 
+	</sql>
+	<sql id="ArticleTop_column">
+		titleId , sortNum 
+	</sql>
+	
+	
+	
+	<select id="selectArticle" resultType="com.sofn.agriculture_gateway_tibet.entity.Article" parameterType="map">
+		SELECT 
+			<include refid="Article_column" />
+		FROM 
+			XZMH_ARTICLE
+		<where>
+			<choose>
+				<when test="aid !=null and aid !='' ">
+					aid = #{aid}
+				</when>
+				<when test="atitle !=null and atitle !='' ">
+					AND atitle = #{atitle}
+				</when>
+				<when test="aAuthor !=null and aAuthor !='' ">
+					AND aAuthor = #{aAuthor}
+				</when>
+				<when test="aContext !=null and aContext !='' ">
+					AND aContext = #{aContext}
+				</when>
+				<when test="titleId !=null and titleId !='' ">
+					AND titleId = #{titleId}
+				</when>
+				<when test="aEnableState !=null and aEnableState !='' ">
+					AND aEnableState = #{aEnableState}
+				</when>
+				<when test="aEnableTop !=null and aEnableTop !='' ">
+					AND aEnableTop = #{aEnableTop}
+				</when>
+				<when test="aEnableHeadline !=null and aEnableHeadline !='' ">
+					AND aEnableHeadline = #{aEnableHeadline}
+				</when>
+				<when test="aHeadlineSort !=null and aHeadlineSort !='' ">
+					AND aHeadlineSort = #{aHeadlineSort}
+				</when>
+				<when test="startTime !=null and startTime !='' ">
+					AND <![CDATA[startTime >= #{updatetime} ]]>
+				</when>
+				<when test="endTime !=null and endTime !='' ">
+					AND <![CDATA[ #{updatetime}) <= endTime ]]>
+				</when>
+			</choose>
+		</where>
+			ORDER BY 
+				aEnableHeadline DESC , aHeadlineSort ,aEnableTop DESC, updatetime
+	</select>
+	
+
+	<insert id="Article_Add" parameterType="list">
+		INSERT INTO
+			 XZMH_ARTICLE(<include refid="Article_column" />)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.aid},#{item.atitle},#{item.aAuthor},#{item.aSources},#{item.aPic},
+			#{item.aContext},#{item.titleId},#{item.aEnableState},#{item.aEnableTop},now(),now())
+		</foreach>
+	</insert>
+
+	<update id="Article_Update" parameterType="com.sofn.agriculture_gateway_tibet.entity.Article">
+		UPDATE
+			XZMH_ARTICLE
+		<set>
+			<if test="atitle !=null and atitle !='' ">
+				atitle like CONCAT(CONCAT('%', #{atitle,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="aAuthor !=null and aAuthor !='' ">
+				aAuthor = #{aAuthor},
+			</if>
+			<if test="aSources !=null and aSources !='' ">
+				aSources = #{aSources},
+			</if>
+			<if test="aPic !=null and aPic !='' ">
+				aPic = #{aPic},
+			</if>
+			<if test="aContext !=null and aContext !='' ">
+				aContext like CONCAT(CONCAT('%', #{aContext,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="titleId !=null and titleId !='' ">
+				titleId = #{titleId},
+			</if>
+			<if test="aEnableState !=null and aEnableState !='' ">
+				aEnableState = #{aEnableState},
+			</if>
+			<if test="aEnableTop !=null and aEnableTop !='' ">
+				aEnableTop = #{aEnableTop},
+			</if>
+			<if test="updateTime !=null and updateTime !='' ">
+				updateTime = #{updateTime},
+			</if>
+		</set>
+		WHERE
+			aid = #{aid}
+	</update>
+
+	<delete id="Article_Delete" parameterType="string">
+		DELETE FROM
+			XZMH_ARTICLE
+		WHERE
+			aid = #{aid}
+	</delete>
+
+
+
+	<!-- 头条新闻 -->
+	<select id="selectArticleTop" resultType="com.sofn.agriculture_gateway_tibet.entity.ArticleTop">
+		SELECT 
+			<include refid="ArticleTop_column" />
+		FROM 
+			XZMH_ARTICLETOP
+	</select>
+
+
+
+	<insert id="setArticleTop" parameterType="list">
+		INSERT INTO
+			 XZMH_ARTICLETOP(<include refid="ArticleTop_column" />)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.titleId},#{item.sortNum})
+		</foreach>
+	</insert>
+
+
+	<delete id="cancelArticleTop" parameterType="string">
+		DELETE FROM
+			XZMH_ARTICLETOP
+		WHERE
+			titleId = #{titleId}
+	</delete>
+
+
+</mapper>

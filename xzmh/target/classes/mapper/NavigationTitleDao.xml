@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sofn.agriculture_gateway_tibet.dao.NavigationTitleDao">
+	
+	<sql id="Title_column">
+		tId , tName , tCode , tIndex , tEnableState , tPic , createTime ,updateTime
+	</sql>
+	
+	<select id="AllTitles" parameterType="map" resultType="com.sofn.agriculture_gateway_tibet.entity.NavigationTitle">
+		SELECT
+			<include refid="Title_column" />
+		FROM
+			XZMH_TITLE
+		<where>
+			<choose>
+				<when test="tId !=null and tId !='' ">
+					tId = #{tId}
+				</when>
+				<when test="tName !=null and tName !='' ">
+					AND tName = #{tName}
+				</when>
+				<when test="tCode !=null and tCode !='' ">
+					AND tCode = #{tCode}
+				</when>
+				<when test="tEnableState !=null and tEnableState !='' ">
+					AND tEnableState = #{tEnableState}
+				</when>
+				<when test="startTime !=null and startTime !='' ">
+					AND <![CDATA[startTime >= #{updatetime} ]]>
+				</when>
+				<when test="endTime !=null and endTime !='' ">
+					AND <![CDATA[ #{updatetime}) <= endTime ]]>
+				</when>
+			</choose>
+		</where>
+	</select> 
+	
+	
+	<insert id="addTitle" parameterType="list">
+		INSERT INTO 
+			XZMH_TITLE(<include refid="Title_column" />)
+		VALUES
+			<foreach collection="list" item="item" separator=",">
+				(#{item.tId},#{item.tName},#{item.tCode},#{item.tIndex},
+				#{item.tEnableState}, #{item.tPic}, #{item.createTime}, #{item.updateTime})
+			</foreach>
+	</insert>
+	
+	
+	<delete id="deleteTitle" parameterType="string">
+		DELETE FROM
+			XZMH_TITLE
+		WHERE
+			tId = #{tId}
+	</delete>
+	
+	
+	<update id="updateTitle" parameterType="com.sofn.agriculture_gateway_tibet.entity.NavigationTitle">
+		update 
+			XZMH_TITLE
+		<set>
+			<choose>
+				<when test="tName !=null and tName !='' ">
+					tName = #{tName},
+				</when>
+				<when test="tCode !=null and tCode !='' ">
+					tCode = #{tCode},
+				</when>
+				<when test="tIndex !=null and tIndex !='' ">
+					tIndex = #{tIndex},
+				</when>
+				<when test="tEnableState !=null and tEnableState !='' ">
+					tEnableState = #{tEnableState},
+				</when>
+				<when test="tPic !=null and tPic !='' ">
+					tPic = #{tPic},
+				</when>
+				<when test="updateTime !=null and updateTime !='' ">
+					updateTime = #{updateTime},
+				</when>
+			</choose>
+		</set>
+		WHERE
+			tId = #{tId}
+	</update>
+	
+	
+</mapper>
