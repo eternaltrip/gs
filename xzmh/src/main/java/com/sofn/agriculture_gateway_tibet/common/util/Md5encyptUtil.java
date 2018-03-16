@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 /**
- * MD5 算法工具类 ??
+ * MD5 算法工具类
  * @author zhandie
  *
  */
@@ -22,7 +22,7 @@ public class Md5encyptUtil {
 	private static final String HEX_NUMS_STR = "0123456789ABCDEF";
 	
 	/**
-	 * 用MD5对密码加 ??
+	 * 用MD5对密码加密
 	 * @param password
 	 * @return
 	 * @throws NoSuchAlgorithmException

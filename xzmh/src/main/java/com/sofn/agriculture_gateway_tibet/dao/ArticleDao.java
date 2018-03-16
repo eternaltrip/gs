@@ -3,8 +3,9 @@ package com.sofn.agriculture_gateway_tibet.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.sofn.agriculture_gateway_tibet.entity.Article;
-import com.sofn.agriculture_gateway_tibet.entity.ArticleTop;
 
 
 /**
@@ -12,13 +13,14 @@ import com.sofn.agriculture_gateway_tibet.entity.ArticleTop;
  * @author yangjin
  *
  */
+@Repository
 public interface ArticleDao {
 	
 	/**
 	 * 添加文章
 	 * @return
 	 */
-	int Article_Add(List<Article> articles);
+	int Article_Add(Article article);
 	
 	
 	/**
@@ -38,7 +40,7 @@ public interface ArticleDao {
 	 * @param map
 	 * @return
 	 */
-	List<Article> selectArticle(Map map);
+	List<Article> selectArticle(Article article);
 	
 	
 	

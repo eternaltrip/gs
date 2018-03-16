@@ -1,8 +1,11 @@
+//导航标题管理
 $(document).ready(function(){
-	
+	var actionState = true;
+	var actionModal;
+	//表单
 	  var table = $("#titleinfoList").DataTable({
 		responsive : true,
-		"ordering": false,
+		"ordering": true,
 		"processing" : true, //开启读取服务器数据时显示正在加载中……特别是大数据量的时候，开启此功能比较好
 		"bLengthChange" : true, //默认true，开启一页显示多少条数据的下拉菜单，允许用户从下拉框(10、25、50和100)，注意需要分页(bPaginate：true)。
 		"oLanguage" : {
@@ -33,26 +36,6 @@ $(document).ready(function(){
 			valid: 'glyphicon glyphicon-ok',
 			invalid: 'glyphicon glyphicon-remove',
 			validating: 'glyphicon glyphicon-refresh'
-		},
-		fields: {
-			mobile:{
-				message:'电话号码输入无效',
-				threshold : 11 ,//满足11为才发送ajax验证
-				validators :{
-					notEmpty:{
-						message:'电话号码不能为空'
-					},
-					remote:{//ajax验证
-						url:'<%=basePath %>sys/checkMobile',
-						message:'电话号码已存在',
-						delay:1000,
-						type:'GET'
-					}
-					
-				}
-			}
-			
-			
 		}
 	}).on('change', '#acountchoice', function() {
 		var sameAsSender = $(this).is(':checked');
@@ -61,29 +44,44 @@ $(document).ready(function(){
 		} else {
 			$('#acountInfo').show();
 		}
-		
 	}).on('success.form.bv', function(e) {
-		// Prevent form submission
 		e.preventDefault();
-		
-		// Get the form instance
 		var $form = $(e.target);
-		
-		// Get the BootstrapValidator instance
 		var bv = $form.data('bootstrapValidator');
-		
 		// Use Ajax to submit form data
 		$.post($form.attr('action'), $form.serialize(), function(result) {
-			alert(result.info);
+			
+			//判断添加是否成功
+			if(result.return_state != 'success'){
+				actionState = false;
+				actionModal = "newtitlemodal";
+			}
+			//设置消息窗口消息内容
+			$("#messcontent").html(result.return_mess);
+			//显示消息窗口并隐藏编辑窗口
+			$("#messModal").modal('show');
+			$("#newtitlemodal").modal("hide");
 		}, 'json');
 	});
 
 
 	
-	//按钮提交
+	//按钮提交form
 	$("#newtitlesub").click(function(){
 		formcheck();
 	});
+	
+	//弹窗确定按钮事件
+	$("#messcomfirm").click(function(){
+		if(actionState){
+			window.location.reload();
+		}else{
+			//隐藏消息窗口并显示编辑窗口
+			$("#messModal").modal('hide');
+			$("#"+actionModal+"").modal("show");
+		}
+	});
+	
 	
 	//form手动检查（适用于form外其他按键进行检查）
 	function formcheck(){
@@ -93,37 +91,174 @@ $(document).ready(function(){
 	
 	
 	
-
-	//双击行事件
-	$("#titleinfoList").find("tbody tr").dblclick(function() {
-		loadtitleInfo($(this).attr("tid"));
-	});
+	
 	//点击编辑按钮
-	$('.editRow').click( function () {
+	$('#titleTables').on('click','button.editRow',function(){
+		defaultFormInput();//重置编辑区域
 		var tid = $(this).parents("tr").attr("tid");
-		loadtitleInfo(tid);
+		loadtitleInfo(tid , "getInfoIntoModal");
 	} );
 	
 	//查询用户信息
-	function loadtitleInfo(titleid) {
-		var url = "title/info?tid=" + titleid;
+	function loadtitleInfo(titleid , functionName) {
+		var url = "title/info.do?tid=" + titleid;
 		$.ajax({
 			url : url,
 			dataType : 'json',
 			success : function(result) {
-				$('#titleForm').find("input[name='tId']").val(result.tId);
-				$('#titleForm').find("input[name='tName']").val(result.tName);
-				$('#titleForm').find("input[name='tCode']").val(result.tCode);
-				$('#titleForm').find("input[name='tIndex']").val(result.tIndex);
-				$('#titleForm').find("input[name='tPic']").val(result.tPic);
-				if(result.tEnableState == "1"){
-					$('#titleForm').find("input[name='tEnableState']").attr("checked");
-				}else{
-					$('#titleForm').find("input[name='tEnableState']").removeAttr("checked");
-				}
+				var  func=eval(functionName);
+				func(result);
 			}
 		});
 	}
+	
+	//把获取到的信息放入信息窗口
+	function getInfoIntoModal(Object){
+		$('#titleForm').find("input[name='tId']").val(Object.tId);
+		$('#titleForm').find("input[name='tName']").val(Object.tName);
+		$('#titleForm').find("input[name='tIndex']").val(Object.tIndex);
+		$('#titleForm').find("input[name='tPic']").val(Object.tPic);
+		$('#image').attr("src" ,Object.tPic);
+		$("input[name='tUrl']").val(Object.tUrl) ;
+		if(Object.tEnableState == "1"){
+			$('#titleForm').find("input[name='tEnableState']").prop("checked", true);
+		}else{
+			$('#titleForm').find("input[name='tEnableState']").prop("checked", false);
+		}
+		
+		if(Object.isUrl == "1"){
+			$('#titleForm').find("input[name='isUrl'][value='0']").prop("checked", false);
+			$('#titleForm').find("input[name='isUrl'][value='1']").prop("checked", true);
+			$("input[name='tUrl']").removeAttr('disabled') ;
+		}else{
+			$('#titleForm').find("input[name='isUrl'][value='1']").prop("checked", false);
+			$('#titleForm').find("input[name='isUrl'][value='0']").prop("checked", true);
+			$("input[name='tUrl']").attr('disabled', 'disabled')
+		}
+		
+		
+		$('#image').show();
+		$("#newtitlemodal").modal("show");
+	}
+	
+	
+	
+	
+	
+	//几个状态的改变（启用，停用，删除）按钮
+//	$(".changestate").click(function(){
+	$('#titleTables').on('click','button.changestate',function(){
+		var tid = $(this).parents("tr").attr("tid");
+		var tname = $(this).parents("tr").attr("tname");
+		var changeType = $(this).attr("changeType");
+		var info;
+		if(changeType == "on"){
+			info = "确定启用<span style=\"color: red;font-size: 24px;\">"+tname+"</span>"
+		}else if(changeType == "off"){
+			info = "确定停用<span style=\"color: red;font-size: 24px;\">"+tname+"</span>"
+		}else{
+			info = "确定删除<span style=\"color: red;font-size: 24px;\">"+tname+"</span><br>删除之后将无法恢复！"
+		}
+		$("#OnOffDelInfo").html(info);
+		$("#OnOffDelcomfirm").attr("tid" , tid);
+		$("#OnOffDelcomfirm").attr("changeType" ,changeType);
+		$("#OnOffDelModal").modal("show");
+	})
+	
+	//启用，停用，删除弹窗界面确认按钮
+	$("#OnOffDelcomfirm").click(function(){
+		var url , data;
+		var changeType = $(this).attr("changeType");
+		var tid = $(this).attr("tid");
+		if(changeType == "on"){
+			url = "title/update.do";
+			data = {tId : tid , tEnableState:1}
+		}else if(changeType == "off"){
+			url = "title/update.do";
+			data = {tId : tid , tEnableState:0}
+		}else{
+			url = "title/del.do";
+			data = {tId : tid }
+		}
+		$.ajax({
+			url : url,
+			data: data,
+			type : 'post',
+			dataType : 'json',
+			success : function(result) {
+				//判断添加是否成功
+				if(result.return_state != 'success'){
+					actionState = false;
+					actionModal = "OnOffDelModal";
+				}
+				//设置消息窗口消息内容
+				$("#messcontent").html(result.return_mess);
+				//显示消息窗口并隐藏编辑窗口
+				$("#OnOffDelModal").modal("hide");
+				$("#messModal").modal('show');
+			}
+		});	
+		
+	});
+
+	
+	
+	
+	
+
+	
+	
+	//新增按钮
+	$("#newTitleBtn").click(function(){
+		defaultFormInput();
+	});
+	
+	//选择图片按钮
+	$("#choosePic").click(function(){
+		$("#picForm").find("input[name='file']").trigger("click");
+	});
+	
+	//jquery上传图片
+	$("#picForm").find("input[name='file']").change(function(){
+		$("#picForm").ajaxSubmit({
+			dataType:'json',
+			success: function(data){
+				if(data.return_state == 'success'){
+					$("#image").attr("src",data.path);
+					$('#titleForm').find("input[name='tPic']").val(data.path);
+					$('#image').show();
+				}
+			},
+			error: function(responseError){
+				alert("系统错误");
+			}
+		
+		});
+	});
+	
+	
+	
+	
+	
+	//重置编辑区域
+	function defaultFormInput(){
+		//重置编辑区域
+		$('#titleForm').data('bootstrapValidator').resetForm(true);
+		$("#image").removeAttr("src");
+		$('#titleForm').find("input[name='tPic']").val(null);
+		$('#titleForm').find("input[name='tEnableState']").removeAttr("checked");
+		$('#image').hide();
+	}
+	
+	//是否是链接
+	$('input[name="isUrl"]').on('change', function() {
+		//var bootstrapValidator = $('#titleForm').data('bootstrapValidator'),
+		isurl = ($(this).val() == '1');
+		isurl ? $("input[name='tUrl']").removeAttr('disabled') :$("input[name='tUrl']").attr('disabled', 'disabled');
+		
+	});
+	
+
 	
 	
 	

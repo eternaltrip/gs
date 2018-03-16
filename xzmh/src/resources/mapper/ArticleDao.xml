@@ -4,77 +4,89 @@
 
 
 	<sql id="Article_column">
-		aid, atitle, aAuthor, aSources, aPic, aContext, titleId, aEnableState, aEnableTop,aEnableHeadline , aHeadlineSort, createtime, updatetime 
+		aId, aTitle, aAuthor, aSources, aPic, aContextSimple , aContext, titleId, aEnableState, aEnableTop,aEnableHeadline, aHeadlineSort , createTime, updateTime 
 	</sql>
 	<sql id="ArticleTop_column">
 		titleId , sortNum 
 	</sql>
 	
-	
-	
-	<select id="selectArticle" resultType="com.sofn.agriculture_gateway_tibet.entity.Article" parameterType="map">
-		SELECT 
-			<include refid="Article_column" />
-		FROM 
-			XZMH_ARTICLE
-		<where>
-			<choose>
-				<when test="aid !=null and aid !='' ">
-					aid = #{aid}
-				</when>
-				<when test="atitle !=null and atitle !='' ">
-					AND atitle = #{atitle}
-				</when>
-				<when test="aAuthor !=null and aAuthor !='' ">
-					AND aAuthor = #{aAuthor}
-				</when>
-				<when test="aContext !=null and aContext !='' ">
-					AND aContext = #{aContext}
-				</when>
-				<when test="titleId !=null and titleId !='' ">
-					AND titleId = #{titleId}
-				</when>
-				<when test="aEnableState !=null and aEnableState !='' ">
-					AND aEnableState = #{aEnableState}
-				</when>
-				<when test="aEnableTop !=null and aEnableTop !='' ">
-					AND aEnableTop = #{aEnableTop}
-				</when>
-				<when test="aEnableHeadline !=null and aEnableHeadline !='' ">
-					AND aEnableHeadline = #{aEnableHeadline}
-				</when>
-				<when test="aHeadlineSort !=null and aHeadlineSort !='' ">
-					AND aHeadlineSort = #{aHeadlineSort}
-				</when>
-				<when test="startTime !=null and startTime !='' ">
-					AND <![CDATA[startTime >= #{updatetime} ]]>
-				</when>
-				<when test="endTime !=null and endTime !='' ">
-					AND <![CDATA[ #{updatetime}) <= endTime ]]>
-				</when>
-			</choose>
-		</where>
-			ORDER BY 
-				aEnableHeadline DESC , aHeadlineSort ,aEnableTop DESC, updatetime
-	</select>
-	
-
-	<insert id="Article_Add" parameterType="list">
+	<insert id="Article_Add" parameterType="com.sofn.agriculture_gateway_tibet.entity.Article">
 		INSERT INTO
 			 XZMH_ARTICLE(<include refid="Article_column" />)
-		VALUES
-		<foreach collection="list" item="item" separator=",">
-			(#{item.aid},#{item.atitle},#{item.aAuthor},#{item.aSources},#{item.aPic},
-			#{item.aContext},#{item.titleId},#{item.aEnableState},#{item.aEnableTop},now(),now())
-		</foreach>
+		VALUES(
+			#{aId},#{aTitle},#{aAuthor},#{aSources},#{aPic},#{aContextSimple},#{aContext},#{titleId},#{aEnableState},
+			#{aEnableTop},#{aEnableHeadline},#{aHeadlineSort},#{createTime}, #{updateTime}
+			)
 	</insert>
+	
+	
+	<select id="selectArticle" resultType="com.sofn.agriculture_gateway_tibet.entity.Article" parameterType="com.sofn.agriculture_gateway_tibet.entity.Article">
+		SELECT
+			a.aId,
+			a.aTitle,
+			a.aAuthor,
+			a.aSources,
+			a.aPic,
+			a.aContextSimple,
+			a.aContext,
+			a.titleId,
+			t.TNAME as titleName,
+			a.aEnableState,
+			a.aEnableTop,
+			a.aEnableHeadline,
+			a.aHeadlineSort,
+			a.createtime,
+			a.updateTime
+		FROM
+			XZMH_ARTICLE a LEFT JOIN XZMH_TITLE t on a.TITLEID = t.TID
+		WHERE 1=1
+			<if test="aId !=null and aId !='' ">
+				AND a.aId = #{aId}
+			</if>
+			<if test="aTitle !=null and aTitle !='' ">
+				AND a.aTitle like CONCAT(CONCAT('%', #{aTitle, jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="aAuthor !=null and aAuthor !='' ">
+				AND a.aAuthor = #{aAuthor}
+			</if>
+			<if test="aContextSimple !=null and aContextSimple !='' ">
+				AND a.aContextSimple = #{aContextSimple}
+			</if>
+			<if test="aContext !=null and aContext !='' ">
+				AND a.aContext = #{aContext}
+			</if>
+			<if test="titleId !=null and titleId !='' ">
+				AND a.titleId = #{titleId}
+			</if>
+			<if test="aEnableState != null ">
+				AND a.aEnableState = #{aEnableState}
+			</if>
+			<if test="aEnableTop != null ">
+				AND a.aEnableTop = #{aEnableTop}
+			</if>
+			<if test="aEnableHeadline != null  ">
+				AND a.aEnableHeadline = #{aEnableHeadline}
+			</if>
+			<if test="aHeadlineSort != null ">
+				AND a.aHeadlineSort = #{aHeadlineSort}
+			</if>
+			<if test="startTime !=null ">
+				AND <![CDATA[ #{startTime} >= a.updateTime ]]>
+			</if>
+			<if test="endTime !=null">
+				AND <![CDATA[ a.updateTime <= #{endTime} ]]>
+			</if>
+		ORDER BY 
+				aEnableHeadline DESC , aHeadlineSort ,aEnableTop DESC, updateTime DESC
+	</select>
+	
 
 	<update id="Article_Update" parameterType="com.sofn.agriculture_gateway_tibet.entity.Article">
 		UPDATE
 			XZMH_ARTICLE
 		<set>
-			<if test="atitle !=null and atitle !='' ">
-				atitle like CONCAT(CONCAT('%', #{atitle,jdbcType=VARCHAR}),'%')
+			<if test="aTitle !=null and aTitle !='' ">
+				aTitle = #{aTitle},
 			</if>
 			<if test="aAuthor !=null and aAuthor !='' ">
 				aAuthor = #{aAuthor},
@@ -85,61 +97,42 @@
 			<if test="aPic !=null and aPic !='' ">
 				aPic = #{aPic},
 			</if>
+			<if test="aContextSimple !=null and aContextSimple !='' ">
+				 aContextSimple = #{aContextSimple},
+			</if>
 			<if test="aContext !=null and aContext !='' ">
-				aContext like CONCAT(CONCAT('%', #{aContext,jdbcType=VARCHAR}),'%')
+				aContext = #{aContext},
 			</if>
 			<if test="titleId !=null and titleId !='' ">
 				titleId = #{titleId},
 			</if>
-			<if test="aEnableState !=null and aEnableState !='' ">
+			<if test="aEnableState !=null  ">
 				aEnableState = #{aEnableState},
 			</if>
-			<if test="aEnableTop !=null and aEnableTop !='' ">
+			<if test="aEnableTop !=null  ">
 				aEnableTop = #{aEnableTop},
 			</if>
-			<if test="updateTime !=null and updateTime !='' ">
+			<if test="aEnableHeadline !=null  ">
+				aEnableHeadline = #{aEnableHeadline},
+			</if>
+			<if test="aHeadlineSort !=null  ">
+				aHeadlineSort = #{aHeadlineSort},
+			</if>
+			<if test="updateTime !=null ">
 				updateTime = #{updateTime},
 			</if>
 		</set>
 		WHERE
-			aid = #{aid}
+			aId = #{aId}
 	</update>
 
 	<delete id="Article_Delete" parameterType="string">
 		DELETE FROM
 			XZMH_ARTICLE
 		WHERE
-			aid = #{aid}
+			aId = #{aId}
 	</delete>
 
-
-
-	<!-- 头条新闻 -->
-	<select id="selectArticleTop" resultType="com.sofn.agriculture_gateway_tibet.entity.ArticleTop">
-		SELECT 
-			<include refid="ArticleTop_column" />
-		FROM 
-			XZMH_ARTICLETOP
-	</select>
-
-
-
-	<insert id="setArticleTop" parameterType="list">
-		INSERT INTO
-			 XZMH_ARTICLETOP(<include refid="ArticleTop_column" />)
-		VALUES
-		<foreach collection="list" item="item" separator=",">
-			(#{item.titleId},#{item.sortNum})
-		</foreach>
-	</insert>
-
-
-	<delete id="cancelArticleTop" parameterType="string">
-		DELETE FROM
-			XZMH_ARTICLETOP
-		WHERE
-			titleId = #{titleId}
-	</delete>
 
 
 </mapper>

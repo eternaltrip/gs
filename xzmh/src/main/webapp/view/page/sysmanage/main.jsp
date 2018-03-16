@@ -15,14 +15,6 @@
 <title>后台管理主页</title>
 </head>
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-			<h3 class="page-header">欢迎来到系统管理中心</h3>
-			</div>
-		</div>
-	</div>
-
 	<div class="modal fade in" id="newusermodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 				<div class="modal-content">
@@ -30,7 +22,7 @@
 						<h4 class="modal-title" id="myModalLabel">新用户信息</h4>
 					</div>
 					<div class="modal-body">
-						<form action="<%=basePath %>sys/newUser" method="post" id="newUserForm"  class="form-horizontal">
+						<form action="<%=basePath %>sys/newUser.do" method="post" id="newUserForm"  class="form-horizontal">
 						
 							<fieldset>
 								<legend>基本信息</legend>
@@ -144,100 +136,10 @@
 
 
 
-	<script type="text/javascript" src="<%=basePath%>statics/js/dataTables_use.js"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
-			
-			//调用表单处理
-			dataTableProcess("#userinfoList");
-			
-			//启动验证
-			$('#newUserForm').bootstrapValidator({
-				excluded: [':disabled', ':hidden', ':not(:visible)'],//设置影藏的元素不进行验证。方便后面的模块直接进行隐藏或者显示。
-				message: '验证未通过',
-				feedbackIcons: {
-					valid: 'glyphicon glyphicon-ok',
-					invalid: 'glyphicon glyphicon-remove',
-					validating: 'glyphicon glyphicon-refresh'
-				},
-				fields: {
-					mobile:{
-						message:'电话号码输入无效',
-						threshold : 11 ,//满足11为才发送ajax验证
-						validators :{
-							notEmpty:{
-								message:'电话号码不能为空'
-							},
-							remote:{//ajax验证
-								url:'<%=basePath %>sys/checkMobile',
-								message:'电话号码已存在',
-								delay:1000,
-								type:'GET'
-							}
-							
-						}
-					}
-					
-					
-				}
-			}).on('change', '#acountchoice', function() {
-				var sameAsSender = $(this).is(':checked');
-				if (!sameAsSender) {
-					$('#acountInfo').hide();
-				} else {
-					$('#acountInfo').show();
-				}
-				
-			}).on('success.form.bv', function(e) {
-				// Prevent form submission
-				e.preventDefault();
-				
-				// Get the form instance
-				var $form = $(e.target);
-				
-				// Get the BootstrapValidator instance
-				var bv = $form.data('bootstrapValidator');
-				
-				// Use Ajax to submit form data
-				$.post($form.attr('action'), $form.serialize(), function(result) {
-					alert(result.info);
-				}, 'json');
-			});
-
-		
-			
-			//按钮提交
-			$("#newusersub").click(function(){
-				formcheck();
-			});
-			
-			//form手动检查（适用于form外其他按键进行检查）
-			function formcheck(){
-				$('#newUserForm').bootstrapValidator('validate');
-				var bootstrapValidator = $('#newUserForm').data('bootstrapValidator');
-			}
-			
-			
-			
-
-			//双击行事件
-			$("#userinfoList").find("tbody tr").dblclick(function() {
-				loadUserInfo($(this).attr("pid"));
-			});
-			//查询用户信息
-			function loadUserInfo(userid) {
-				var url = "<%=basePath%>sys/userInfo?userId=" + userid
-				$.ajax({
-					url : url,
-					dataType : 'json',
-					success : function(result) {
-						alert(result.user);
-					}
-				});
-			}
-
 		});
 	</script>
 </body>

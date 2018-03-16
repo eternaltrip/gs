@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sofn.agriculture_gateway_tibet.common.util.UuidTool;
 import com.sofn.agriculture_gateway_tibet.dao.NavigationTitleDao;
 import com.sofn.agriculture_gateway_tibet.entity.Article;
 import com.sofn.agriculture_gateway_tibet.entity.NavigationTitle;
-import com.sofn.agriculture_gateway_tibet.entity.PageBean;
 import com.sofn.agriculture_gateway_tibet.service.NavigationTitleService;
 
 @Service
@@ -23,10 +23,10 @@ public class NavigationTitleServiceImpl implements NavigationTitleService {
 	private NavigationTitleDao titlesDao;
 
 	@Override
-	public PageBean<NavigationTitle> AllTitlesPaging(int currentPage , int pageSize ,Map map) {
+	public PageInfo<NavigationTitle> AllTitlesPaging(int currentPage , int pageSize ,Map map) {
 		PageHelper.startPage(currentPage, pageSize);
 		List<NavigationTitle> list = titlesDao.AllTitles(map);
-		PageBean<NavigationTitle> pageInfo = new PageBean<NavigationTitle>(list);
+		PageInfo<NavigationTitle> pageInfo = new PageInfo<NavigationTitle>(list);
 		return pageInfo;
 	}
 	
@@ -58,6 +58,7 @@ public class NavigationTitleServiceImpl implements NavigationTitleService {
 
 	@Override
 	public int updateTitle(NavigationTitle titles) {
+		titles.setUpdateTime(new Date());
 		return titlesDao.updateTitle(titles);
 	}
 

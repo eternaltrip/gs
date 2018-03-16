@@ -16,23 +16,42 @@ public class NavigationTitle implements Serializable{
 	private static final long serialVersionUID = -6991466176425360274L;
 	private String tId;//数据id	
 	private String tName;//导航标题名
-	private String tCode;//导航标题编码
+	private String tCode;//导航标题编码--暂时不需要用到
 	private String tIndex;//序号
-	private Integer tEnableState;//是否启用(1:开启，0：关闭)
+	private int tEnableState;//是否启用(1:开启，0：关闭)
 	private String tPic;//导航标题图片
+	
+	private Integer isUrl;//是否是链接
+	private String tUrl;//链接地址
 	private Date createTime;
 	private Date updateTime;
 	
 	private List<Article> articles; //对应的文章
 	
+	/**
+	 * 检查必要元素是否为空
+	 * @return
+	 */
+	public boolean checkMustNeed() {
+		if(tName != null  && tIndex !=null ) {
+			return true;
+		}
+		return false;
+	}
 	
-	public Integer gettEnableState() {
+	
+
+	public int gettEnableState() {
 		return tEnableState;
 	}
 
-	public void settEnableState(Integer tEnableState) {
+
+
+	public void settEnableState(int tEnableState) {
 		this.tEnableState = tEnableState;
 	}
+
+
 
 	public String gettId() {
 		return tId;
@@ -96,6 +115,30 @@ public class NavigationTitle implements Serializable{
 
 	public void setArticles(List<Article> articles) {
 		this.articles = articles;
+	}
+
+
+
+	public Integer getIsUrl() {
+		return isUrl;
+	}
+
+
+
+	public void setIsUrl(Integer isUrl) {
+		this.isUrl = isUrl;
+	}
+
+
+
+	public String gettUrl() {
+		return tUrl;
+	}
+
+
+
+	public void settUrl(String tUrl) {
+		this.tUrl = tUrl;
 	}
 	
 }

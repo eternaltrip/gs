@@ -30,7 +30,8 @@
 		<property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
 		<property name="acquireIncrement" value="${jdbc.acquireIncrement}" />
 		<property name="maxIdleTime" value="${jdbc.maxIdleTime}"></property>
-		
+		<property name="acquireRetryDelay" value="100"/>
+		<property name="breakAfterAcquireFailure"  value="false"/>
 	</bean>
 	
 
@@ -38,11 +39,13 @@
 	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean" >
 		<!-- 注入数据库连接池 ,注意！！！这里是注入，不是value -->
 		<property name="dataSource" ref="dataSource"/>
-		<!-- 配置mybatis 全局配置文件 -->
-		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 		<!-- 扫描pojo包 -->
 		<property name="typeAliasesPackage" value="com.**.entity"/>
-		<!-- 扫描sql配置文件：mapping需要的xml文件 -->
+	
+		<!-- 配置mybatis 全局配置文件 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		
+			<!-- 扫描sql配置文件：mapping需要的xml文件 -->
 		<property name="mapperLocations" value="classpath:mapper/**/*.xml"/>
 	</bean>
 	

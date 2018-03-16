@@ -36,10 +36,24 @@ public class SysComAdminServiceImpl implements SysUserService {
 
 	@Override
 	public Boolean changePasswd(String accountId, String passwd) {
-		int no = sysUserDao.changePasswd(accountId, passwd);
-		if(no == 1) {
-			return true;
+		
+		try {
+			SysComAdmin admin= new SysComAdmin();
+			
+			admin.setId(accountId);
+			admin.setUserPwd(Md5encyptUtil.getEncryptedPwd(passwd));
+			int no = sysUserDao.changePasswd(admin);
+			if(no == 1) {
+				return true;
+			}
+			
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
+		
+		
 		return false;
 	}
 

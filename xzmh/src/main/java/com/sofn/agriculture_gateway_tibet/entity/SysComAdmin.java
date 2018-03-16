@@ -11,7 +11,7 @@ import java.util.Date;
 public class SysComAdmin implements Serializable{
 	private static final long serialVersionUID = -8361378472670710746L;
 	private String id;//id
-	private String realName;
+	private String realName;//真实姓名
 	private String userName;//用户帐号
 	private String userPwd;//用户密码
 	private String name;//用户姓名

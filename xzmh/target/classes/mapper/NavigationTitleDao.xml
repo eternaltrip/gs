@@ -3,7 +3,7 @@
 <mapper namespace="com.sofn.agriculture_gateway_tibet.dao.NavigationTitleDao">
 	
 	<sql id="Title_column">
-		tId , tName , tCode , tIndex , tEnableState , tPic , createTime ,updateTime
+		tId , tName , tCode , tIndex , tEnableState , tPic ,isUrl , tUrl , createTime ,updateTime
 	</sql>
 	
 	<select id="AllTitles" parameterType="map" resultType="com.sofn.agriculture_gateway_tibet.entity.NavigationTitle">
@@ -11,28 +11,27 @@
 			<include refid="Title_column" />
 		FROM
 			XZMH_TITLE
-		<where>
-			<choose>
-				<when test="tId !=null and tId !='' ">
-					tId = #{tId}
-				</when>
-				<when test="tName !=null and tName !='' ">
+		
+		WHERE 1=1 
+				<if test="tId !=null and tId !='' ">
+					AND tId = #{tId}
+				</if>
+				<if test="tName !=null and tName !='' ">
 					AND tName = #{tName}
-				</when>
-				<when test="tCode !=null and tCode !='' ">
+				</if>
+				<if test="tCode !=null and tCode !='' ">
 					AND tCode = #{tCode}
-				</when>
-				<when test="tEnableState !=null and tEnableState !='' ">
+				</if>
+				<if test="tEnableState !=null and tEnableState !='' ">
 					AND tEnableState = #{tEnableState}
-				</when>
-				<when test="startTime !=null and startTime !='' ">
+				</if>
+				<if test="startTime !=null and startTime !='' ">
 					AND <![CDATA[startTime >= #{updatetime} ]]>
-				</when>
-				<when test="endTime !=null and endTime !='' ">
+				</if>
+				<if test="endTime !=null and endTime !='' ">
 					AND <![CDATA[ #{updatetime}) <= endTime ]]>
-				</when>
-			</choose>
-		</where>
+				</if>
+		ORDER BY tIndex
 	</select> 
 	
 	
@@ -42,7 +41,7 @@
 		VALUES
 			<foreach collection="list" item="item" separator=",">
 				(#{item.tId},#{item.tName},#{item.tCode},#{item.tIndex},
-				#{item.tEnableState}, #{item.tPic}, #{item.createTime}, #{item.updateTime})
+				#{item.tEnableState}, #{item.tPic}, #{item.isUrl}, #{item.tUrl} , #{item.createTime}, #{item.updateTime})
 			</foreach>
 	</insert>
 	
@@ -59,26 +58,35 @@
 		update 
 			XZMH_TITLE
 		<set>
-			<choose>
-				<when test="tName !=null and tName !='' ">
+			
+				<if test="tName !=null and tName !='' ">
 					tName = #{tName},
-				</when>
-				<when test="tCode !=null and tCode !='' ">
+				</if>
+				<if test="tCode !=null and tCode !='' ">
 					tCode = #{tCode},
-				</when>
-				<when test="tIndex !=null and tIndex !='' ">
+				</if>
+				<if test="tIndex !=null and tIndex !='' ">
 					tIndex = #{tIndex},
-				</when>
-				<when test="tEnableState !=null and tEnableState !='' ">
+				</if>
+				<if test="tEnableState !=null "><!-- mybaits 中字段如果是int类型，那么0会被认为是空 -->
 					tEnableState = #{tEnableState},
-				</when>
-				<when test="tPic !=null and tPic !='' ">
+				</if>
+				<if test="tPic !=null and tPic !='' ">
 					tPic = #{tPic},
-				</when>
-				<when test="updateTime !=null and updateTime !='' ">
+				</if>
+				
+				<if test="isUrl !=null ">
+					isUrl = #{isUrl},
+				</if>
+				
+				<if test="tUrl !=null and tUrl !='' ">
+					tUrl = #{tUrl},
+				</if>
+				
+				<if test="updateTime !=null "><!-- mybaits 中字段如果是date类型，进行!=''判断就会发生异常 -->
 					updateTime = #{updateTime},
-				</when>
-			</choose>
+				</if>
+			
 		</set>
 		WHERE
 			tId = #{tId}

@@ -3,8 +3,8 @@ package com.sofn.agriculture_gateway_tibet.service;
 import java.util.List;
 import java.util.Map;
 
+import com.github.pagehelper.PageInfo;
 import com.sofn.agriculture_gateway_tibet.entity.NavigationTitle;
-import com.sofn.agriculture_gateway_tibet.entity.PageBean;
 
 
 /**
@@ -19,7 +19,7 @@ public interface NavigationTitleService {
 	 * @param map
 	 * @return
 	 */
-	public PageBean<NavigationTitle> AllTitlesPaging(int currentPage , int pageSize ,Map map);
+	public PageInfo<NavigationTitle> AllTitlesPaging(int currentPage , int pageSize ,Map map);
 	
 	/**
 	 * 查询所有标题。

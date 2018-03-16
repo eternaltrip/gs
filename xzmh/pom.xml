@@ -107,6 +107,7 @@
 			<artifactId>pagehelper</artifactId>
 			<version>5.1.2</version>
 		</dependency>
+
 		<!-- jsqlparser -->
 		<dependency>
 			<groupId>com.github.jsqlparser</groupId>
@@ -130,6 +131,12 @@
 		</dependency>
 
 
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.59</version>
+		</dependency>
 
 
 		<!--其他需要的包 -->
@@ -154,6 +161,14 @@
 			<artifactId>commons-file</artifactId>
 			<version>1.2.9</version>
 		</dependency>
+
+		<!-- 图片压缩处理 -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+
 
 		<!-- 页面装饰器sitemesh -->
 		<dependency>

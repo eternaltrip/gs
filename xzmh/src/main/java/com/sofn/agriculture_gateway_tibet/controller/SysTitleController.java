@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.pagehelper.PageInfo;
+import com.sofn.agriculture_gateway_tibet.controller.BaseController.RETURN_STATE_INFO;
 import com.sofn.agriculture_gateway_tibet.entity.NavigationTitle;
-import com.sofn.agriculture_gateway_tibet.entity.PageBean;
 import com.sofn.agriculture_gateway_tibet.service.NavigationTitleService;
+
+import oracle.net.jdbc.nl.NVNavigator;
 
 /**
  * 系统导航标题管理。
@@ -62,7 +65,7 @@ public class SysTitleController  extends BaseController {
 		
 		
 		Map<String,Object> param = new HashMap<String,Object>();
-		PageBean<NavigationTitle> pageBean = titleService.AllTitlesPaging(start,length,param);
+		PageInfo<NavigationTitle> pageBean = titleService.AllTitlesPaging(start,length,param);
 		
 		
 		info.put("aaData", pageBean.getList());
@@ -73,6 +76,29 @@ public class SysTitleController  extends BaseController {
 		return info;
 	}
 	
+	
+	
+	/**
+	 * 标题检测，是否存在
+	 */
+	@RequestMapping("/titleNameCheck")
+	@ResponseBody
+	public Object TitleNameCheck(@RequestParam("tCode") String tCode , String tId) {
+		Map<String ,Object> retVal = new HashMap<String, Object>();
+		
+		
+		Map<String ,String> param = new HashMap<String, String>();
+		param.put("tCode", tCode);
+		List<NavigationTitle> list = titleService.AllTitles(param);
+		if(list == null || (list != null && list.size() == 0) || (list != null && list.size() > 0 && list.get(0).gettId().equals(tId))   ) {
+			retVal.put("valid", true );
+			retVal.put("message", "导航编码可用");
+		}else {
+			retVal.put("valid", false );
+			retVal.put("message", "导航编码已存在");
+		}
+		return retVal;
+	}
 	
 	/**
 	 * 标题详情
@@ -90,28 +116,66 @@ public class SysTitleController  extends BaseController {
 		return null;
 	}
 	
+	
+	
 	/**
-	 *标题的增加
+	 *标题的增加或修改
 	 * @param modelAndView
 	 * @return
 	 */
-	@RequestMapping("add")
+	@RequestMapping("/addOrUpdate")
 	@ResponseBody
 	public Object AddTitle( NavigationTitle title) {
-		
-		return titleService.addTitle(title);
+			Map<String ,Object> retVal = new HashMap<String, Object>();
+			
+			if(title!= null && title.checkMustNeed()) {
+				if(title.gettId() != null && !title.gettId().equals("")) {
+					int num = titleService.updateTitle(title);
+					if(num > 0) {
+						retVal.put(RETURN_STATE, RETURN_STATE_INFO.success.name());
+						retVal.put(RETURN_MESS, CHANGE_SUCCESS_MESS );
+					}else {
+						retVal.put(RETURN_STATE, RETURN_STATE_INFO.failed.name());
+						retVal.put(RETURN_MESS, CHANGE_FAILED_MESS );
+					}
+				}else {
+					int num = titleService.addTitle(title);
+					if(num > 0) {
+						retVal.put(RETURN_STATE, RETURN_STATE_INFO.success.name());
+						retVal.put(RETURN_MESS, ADD_SUCCESS_MESS );
+					}else {
+						retVal.put(RETURN_STATE, RETURN_STATE_INFO.failed.name());
+						retVal.put(RETURN_MESS, ADD_FAILED_MESS );
+					}
+				}
+			}
+			return retVal;
 	}
 	
 	/**
-	 *标题的修改
+	 *标题的启用或停用
 	 * @param modelAndView
 	 * @return
 	 */
-	@RequestMapping("update")
+	@RequestMapping("/update")
 	@ResponseBody
-	public Object UpdateTitle(@RequestParam(name="title" , required = true) NavigationTitle title) {
+	public Object UpdateTitle(@RequestParam(name="tId" , required = true) String tId,
+			@RequestParam(name="tEnableState" , required = true) int tEnableState) {
+		Map<String ,Object> retVal = new HashMap<String, Object>();
 		
-		return  titleService.updateTitle(title);
+		NavigationTitle title = new NavigationTitle();
+		title.settId(tId);
+		title.settEnableState(tEnableState);
+		int num = titleService.updateTitle(title);
+		if(num > 0 ) {
+			retVal.put(RETURN_STATE, RETURN_STATE_INFO.success.name());
+			retVal.put(RETURN_MESS, CHANGE_SUCCESS_MESS );
+		}else {
+			retVal.put(RETURN_STATE, RETURN_STATE_INFO.failed.name());
+			retVal.put(RETURN_MESS, CHANGE_FAILED_MESS );
+		}
+		
+		return retVal;
 	}
 	
 
@@ -120,11 +184,21 @@ public class SysTitleController  extends BaseController {
 	 * @param modelAndView
 	 * @return
 	 */
-	@RequestMapping("del")
+	@RequestMapping("/del")
 	@ResponseBody
-	public Object deleteTitle(@RequestParam(name="tid" , required = true) String tid) {
+	public Object deleteTitle(@RequestParam(name="tId" , required = true) String tId) {
+		Map<String ,Object> retVal = new HashMap<String, Object>();
 		
-		return titleService.deleteTitle(tid);
+		int num = titleService.deleteTitle(tId);
+		if(num > 0 ) {
+			retVal.put(RETURN_STATE, RETURN_STATE_INFO.success.name());
+			retVal.put(RETURN_MESS, DEL_SUCCESS_MESS);
+		}else {
+			retVal.put(RETURN_STATE, RETURN_STATE_INFO.failed.name());
+			retVal.put(RETURN_MESS, DEL_FAILED_MESS );
+		}
+		
+		return retVal;
 	}	
 
 	

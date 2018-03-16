@@ -20,9 +20,10 @@
 			<ref bean="mappingJacksonHttpMessageConverter" />
 		</mvc:message-converters>
 	</mvc:annotation-driven>
+	
+	
+	<mvc:resources location="/statics/" mapping="/statics/**"/> 
 
-	<!--静态资源映射 -->
-	<mvc:resources location="/statics/" mapping="/statics/**"></mvc:resources>
 
 	<!-- 配置jsp显示的ViewResolver -->
 	<bean
@@ -41,7 +42,6 @@
 		<property name="maxUploadSize" value="102400000" />
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="resolveLazily" value="true" />
-		<property name="uploadTempDir" value="fileUpload/temp" />
 	</bean>
 
 	<!-- 针对ie的json问题配置 -->
@@ -56,10 +56,22 @@
 
 
 	<!-- 配置拦截器 -->
-	<!-- <mvc:interceptors> <mvc:interceptor> <mvc:mapping path="/*" /> <bean 
-		class="com.sofn.agriculture_gateway_tibet.common.handler.SqlInjectCheckHandler" 
-		/> </mvc:interceptor> </mvc:interceptors> -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/account/checkOldPw.do" />
+			<mvc:mapping path="/account/changePW.do" />
+			<mvc:mapping path="/sys,do" />
+			<mvc:mapping path="/sys/*.do" />
+			<mvc:mapping path="/article.do" />
+			<mvc:mapping path="/article/*.do" />
+			<mvc:mapping path="/title.do" />
+			<mvc:mapping path="/title/*.do" />
+			<mvc:mapping path="/link.do" />
+			<mvc:mapping path="/link/*.do" />
+			<bean class="com.sofn.agriculture_gateway_tibet.common.handler.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 
-	<import resource="spring-service.xml" />
-	<import resource="spring-dao.xml" />
+<!-- 	<import resource="spring-service.xml" />
+	<import resource="spring-dao.xml" /> -->
 </beans>

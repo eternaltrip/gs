@@ -7,9 +7,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sofn.agriculture_gateway_tibet.common.util.UuidTool;
 import com.sofn.agriculture_gateway_tibet.dao.ArticleDao;
 import com.sofn.agriculture_gateway_tibet.entity.Article;
+import com.sofn.agriculture_gateway_tibet.entity.NavigationTitle;
 import com.sofn.agriculture_gateway_tibet.service.ArticleService;
 
 @Service
@@ -20,17 +23,21 @@ public class ArticleServiceImpl implements ArticleService {
 	
 	
 	@Override
-	public int Article_Add(List<Article> articles) {
-		if(articles == null && articles.size() == 0) {
+	public int Article_Add(Article article) {
+		if(article == null) {
 			return 0;
 		}
 		
-		for (Article article : articles) {
-			article.setaId(new UuidTool().getUuid());
-			article.setCreateTime(new Date());
-			article.setUpdateTime(new Date());
-		}
-		return articleDao.Article_Add(articles);
+		article.setaId(new UuidTool().getUuid());
+		article.setaEnableHeadline(0);
+		article.setaEnableState(1);
+		article.setaEnableTop(0);
+		article.setaHeadlineSort(0);
+		
+		article.setCreateTime(new Date());
+		article.setUpdateTime(new Date());
+	
+		return articleDao.Article_Add(article);
 	}
 
 	@Override
@@ -47,12 +54,23 @@ public class ArticleServiceImpl implements ArticleService {
 		if(article ==null ) {
 			return 0;
 		}
+		article.setUpdateTime(new Date());
 		return articleDao.Article_Update(article);
 	}
 
 	@Override
-	public List<Article> selectArticle(Map map) {
-		return articleDao.selectArticle(map);
+	public List<Article> selectArticle(Article article) {
+		return articleDao.selectArticle(article);
+	}
+
+	@Override
+	public PageInfo<Article> selectArticle(Article article, int pageNum, int pageSize) {
+
+		PageHelper.startPage(pageNum, pageSize);
+		List<Article> list = articleDao.selectArticle(article);
+		PageInfo page = new PageInfo(list);
+		
+		return page;
 	}
 
 }

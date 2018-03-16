@@ -14,6 +14,6 @@ public interface SysUserDao {
 	
 	SysComAdmin selectSysAdminByusernameAndPasswd(String username);
 	
-	int changePasswd(String accountId, String passwd);
+	int changePasswd(SysComAdmin admin);
 
 }

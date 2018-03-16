@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sofn.agriculture_gateway_tibet.dao.OtherLinkDao">
+
+
+	<resultMap id="BaseResultMap"
+		type="com.sofn.agriculture_gateway_tibet.entity.OtherLink">
+		<id column="LID" property="lid" jdbcType="VARCHAR" />
+		<result column="LINKNAME" property="linkname" jdbcType="VARCHAR" />
+		<result column="LINKSORT" property="linksort" jdbcType="DECIMAL" />
+		<result column="LINKSTATE" property="linkstate" jdbcType="DECIMAL" />
+		<result column="CREATETIME" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="UPDATETIME" property="updatetime" jdbcType="TIMESTAMP" />
+		<result column="LINKADDR" property="linkaddr" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		LID, LINKNAME, LINKSORT, LINKSTATE, CREATETIME, UPDATETIME,
+		LINKADDR
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+			<include refid="Base_Column_List" />
+		from 
+			XZMH_OTHERLINK
+		where 
+			LID = #{lid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="map">
+		select
+			<include refid="Base_Column_List" />
+		from
+			XZMH_OTHERLINK
+		
+		<trim prefix="where" prefixOverrides="and" >
+			<if test="lid != null">
+				and lid = #{lid,jdbcType=VARCHAR}
+			</if>
+			<if test="linkname != null">
+				and linkname = #{linkname,jdbcType=VARCHAR}
+			</if>
+			<if test="linksort != null">
+				and linksort =#{linksort,jdbcType=DECIMAL}
+			</if>
+			<if test="linkstate != null">
+				and linkstate =#{linkstate,jdbcType=DECIMAL}
+			</if>
+			<if test="createtime != null">
+				and createtime =#{createtime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updatetime != null">
+				and updatetime =#{updatetime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="linkaddr != null">
+				and linkaddr =#{linkaddr,jdbcType=VARCHAR}
+			</if>
+		</trim>
+		order by LINKSTATE desc ,LINKSORT 
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+			XZMH_OTHERLINK
+		where 
+			LID = #{lid,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.sofn.agriculture_gateway_tibet.entity.OtherLink">
+		insert into 
+			XZMH_OTHERLINK (LID, LINKNAME, LINKSORT, LINKSTATE, CREATETIME, UPDATETIME, LINKADDR)
+		values 
+			(#{lid,jdbcType=VARCHAR}, #{linkname,jdbcType=VARCHAR}, #{linksort,jdbcType=DECIMAL},
+			#{linkstate,jdbcType=DECIMAL}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP},
+			#{linkaddr,jdbcType=VARCHAR})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.sofn.agriculture_gateway_tibet.entity.OtherLink">
+		insert into 
+			XZMH_OTHERLINK
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="lid != null">
+				LID,
+			</if>
+			<if test="linkname != null">
+				LINKNAME,
+			</if>
+			<if test="linksort != null">
+				LINKSORT,
+			</if>
+			<if test="linkstate != null">
+				LINKSTATE,
+			</if>
+			<if test="createtime != null">
+				CREATETIME,
+			</if>
+			<if test="updatetime != null">
+				UPDATETIME,
+			</if>
+			<if test="linkaddr != null">
+				LINKADDR,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="lid != null">
+				#{lid,jdbcType=VARCHAR},
+			</if>
+			<if test="linkname != null">
+				#{linkname,jdbcType=VARCHAR},
+			</if>
+			<if test="linksort != null">
+				#{linksort,jdbcType=DECIMAL},
+			</if>
+			<if test="linkstate != null">
+				#{linkstate,jdbcType=DECIMAL},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatetime != null">
+				#{updatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="linkaddr != null">
+				#{linkaddr,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.sofn.agriculture_gateway_tibet.entity.OtherLink">
+		update 
+			XZMH_OTHERLINK
+		<set>
+			<if test="linkname != null">
+				LINKNAME = #{linkname,jdbcType=VARCHAR},
+			</if>
+			<if test="linksort != null">
+				LINKSORT = #{linksort,jdbcType=DECIMAL},
+			</if>
+			<if test="linkstate != null">
+				LINKSTATE = #{linkstate,jdbcType=DECIMAL},
+			</if>
+			<if test="createtime != null">
+				CREATETIME = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatetime != null">
+				UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="linkaddr != null">
+				LINKADDR = #{linkaddr,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where 
+			LID = #{lid,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.sofn.agriculture_gateway_tibet.entity.OtherLink">
+		update
+			XZMH_OTHERLINK
+		set 
+			LINKNAME = #{linkname,jdbcType=VARCHAR},
+			LINKSORT = #{linksort,jdbcType=DECIMAL},
+			LINKSTATE = #{linkstate,jdbcType=DECIMAL},
+			CREATETIME = #{createtime,jdbcType=TIMESTAMP},
+			UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+			LINKADDR = #{linkaddr,jdbcType=VARCHAR}
+		where 
+			LID = #{lid,jdbcType=VARCHAR}
+	</update>
+</mapper>
