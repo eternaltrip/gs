@@ -6,16 +6,14 @@
 <%@ page
 	import="com.sofn.agriculture_gateway_tibet.common.handler.HostServerHandler"%>
 <%
-	String path = HostServerHandler.hostPath() + "/";
+	String basePath = HostServerHandler.hostPath() + "/";
 %>
-<!DOCTYPE>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>国家农产品质量安全监管追溯信息网</title>
 </head>
 <body>
 <body>
-	<div>
 		<!--主体 begin-->
 		<div class="main_body">
 			<div class="main_left">
@@ -25,24 +23,14 @@
 					<div id="slide_content" class="slide_content"
 						style="margin-right: 8px">
 						<div id="slide_pic" class="slide_pic">
-							<div class="slide_item" style="display: none;">
-								<a href="#"> <img src="images/1.jpg" style="opacity: 1;">
-								</a> <span class="shadow"> <a target="_blank" href="#"
-									title="中心召开2015年度工作总结暨表彰大会">中心召开2015年度工作总结暨表彰大会</a>
-								</span>
-							</div>
-							<div class="slide_item" style="display: none;">
-								<a href="#"> <img src="images/2.jpg" style="opacity: 1;">
-								</a> <span class="shadow"> <a target="_blank" href="#"
-									title="成都住房公积金管理中心“廉洁承诺进大厅”摄影作品获二等奖">成都住房公积金管理中心“廉洁承诺进大厅”摄..</a>
-								</span>
-							</div>
-							<div class="slide_item" style="display: none;">
-								<a href="#"> <img src="images/3.jpg" style="opacity: 1;">
-								</a> <span class="shadow"> <a target="_blank" href="#"
-									title="成都住房公积金管理中心“廉洁承诺进大厅”摄影作品获二等奖">成都住房公积金管理中心“廉洁承诺进大厅”摄..</a>
-								</span>
-							</div>
+							<c:forEach items="${tops }" var="top" >
+								<div class="slide_item" style="display: none;">
+									<a href="<%=basePath%>home/details.do?aId=${top.aId}"> <img src="<%=basePath%>${top.aPic}" style="opacity: 1; max-width: 770px;max-height: 320px;">
+									</a> <span class="shadow"> <a target="_blank" href="<%=basePath%>home/details.do?aId=${top.aId}"
+										title="${top.aTitle }" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${top.aTitle }</a>
+									</span>
+								</div>
+							</c:forEach>
 						</div>
 						<div class="slide_btn_group">
 							<div class="slide_btn" id="slide_btn">
@@ -59,7 +47,7 @@
 					</div>
 					<script type="text/javascript">
 						Qfast.add('widgets', {
-							path : "./js/terminator2.2.min.js",
+							path : "<%=basePath%>statics/js/terminator2.2.min.js",
 							type : "js",
 							requires : [ 'fx' ]
 						});
@@ -83,29 +71,29 @@
 								function(index, ele) {
 									if (index == 0) {
 										$(this).find("a").attr("href",
-												"http://www.baidu.com");
+												$(this).find("a").attr("href"));
 										$(this).find("img").attr("src",
-												"images/1.jpg");
+												$(this).find("img").attr("src"));
 									} else if (index == 1) {
 										$(this).find("a").attr("href",
-												"http://www.360.com");
+												$(this).find("a").attr("href"));
 										$(this).find("a").find("img").attr(
-												"src", "images/1.jpg");
+												"src", $(this).find("img").attr("src"));
 									} else if (index == 2) {
 										$(this).find("a").attr("href",
-												"http://www.weibo.com");
+												$(this).find("a").attr("href"));
 										$(this).find("img").attr("src",
-												"images/1.jpg");
+												$(this).find("img").attr("src"));
 									} else if (index == 3) {
 										$(this).find("a").attr("href",
-												"http://www.weibo.com");
+												$(this).find("a").attr("href"));
 										$(this).find("img").attr("src",
-												"images/1.jpg");
+												$(this).find("img").attr("src"));
 									} else if (index == 4) {
 										$(this).find("a").attr("href",
-												"http://www.weibo.com");
+												$(this).find("a").attr("href"));
 										$(this).find("img").attr("src",
-												"images/1.jpg");
+												$(this).find("img").attr("src"));
 									}
 								})
 					</script>
@@ -133,48 +121,20 @@
 							<!--栏目名字-->
 							<div class="lm_title">
 								<div class="lm_name">
-									<a class="tit" href="#">新闻资讯</a> <a class="more mt20" href="#">更多>></a>
+									<a class="tit" href="<%=basePath%>home/list.do?tId=${titles[1].tId }">${titles[1].tName }</a>
+									<a class="more mt20" href="<%=basePath%>home/list.do?tId=${titles[1].tId }">更多>></a>
 								</div>
 							</div>
 							<!--栏目名字 end-->
 							<div class="lm_rt_content">
 								<ul>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
-									<li><a href="#" target="" class="wz_title"
-										title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a> <span>[03-12]</span>
-									</li>
+									<c:forEach items="${page_1_12 }" var="info">
+										<li><a href="<%=basePath%>home/details.do?aId=${info.aId }" target="" class="wz_title"
+											title="${info.aTitle }">${info.aTitle }</a>
+											<span><fmt:formatDate value="${info.updateTime }" pattern="yyyy-MM-dd"/></span>
+										</li>
+									</c:forEach>
+								
 								</ul>
 							</div>
 						</div>
@@ -190,7 +150,7 @@
 							</div>
 						</div>
 						<div class="pt_link">
-							<a href="#"> <img src="images/rk1.jpg" alt="" />
+							<a href="#"> <img src="<%=basePath%>statics/images/rk1.jpg" alt="" />
 							</a>
 							<div class="content" style="background: #eefff5;">
 								<a href="#"
@@ -200,7 +160,7 @@
 						</div>
 						<div class="clearfix"></div>
 						<div class="pt_link">
-							<a href="#"> <img src="images/rk2.jpg" alt="" />
+							<a href="#"> <img src="<%=basePath%>statics/images/rk2.jpg" alt="" />
 							</a>
 							<div class="content" style="background: #ebfaff;">
 								<a href="#"
@@ -209,35 +169,7 @@
 							</div>
 						</div>
 						<div class="clearfix"></div>
-						<!--栏目名字 end-->
-						<!-- <div class="lm_rt_content">
-                                <ul style="margin-left:22px;">
-                                    <li>
-                                        <a href="#" target="" class="wz_title" title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a>
-                                        <span>[03-12]</span>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="" class="wz_title" title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a>
-                                        <span>[03-12]</span>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="" class="wz_title" title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a>
-                                        <span>[03-12]</span>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="" class="wz_title" title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a>
-                                        <span>[03-12]</span>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="" class="wz_title" title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a>
-                                        <span>[03-12]</span>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="" class="wz_title" title="猪肉需求继续疲软 3月份住家或上演一幕戏剧">猪肉需求继续疲软 3月份住家或上演一幕戏剧</a>
-                                        <span>[03-12]</span>
-                                    </li>
-                                </ul>
-                            </div> -->
+						
 					</div>
 					<!--登录栏目 end-->
 				</div>
@@ -255,43 +187,23 @@
 							<!--栏目名字-->
 							<div class="lm_title">
 								<div class="lm_name">
-									<a class="tit" href="#">行业动态</a> <a href="#" class="more mt20">更多>></a>
+									<a class="tit" href="<%=basePath%>home/list.do?tId=${titles[2].tId}">${titles[2].tName }</a>
+									<a href="<%=basePath%>home/list.do?tId=${titles[2].tId}" class="more mt20">更多>></a>
 								</div>
 							</div>
 							<!--栏目名字 end-->
 							<div class="qiye">
-								<div class="qiye-item">
-									<p>
-										<a href="#">四川蒙顶山跃华茶业集团有限公司</a>
-									</p>
-									<div class="qiye-item-dl">
-										<img src="images/item1.jpg" alt="" /> <span>跃华集团始建于1994年，经过十多年的传承积累，开拓奋进，现今已成为省级扶贫龙头企业</span>
+								<c:forEach items="${page_2_4 }" var="info">
+									<div class="qiye-item">
+										<p style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right: 80px;">
+											<a href="<%=basePath%>home/details.do?aId=${info.aId}">${info.aTitle }</a>
+										</p>
+										<div class="qiye-item-dl">
+											<img src="<%=basePath%>${info.aPic}"  style="max-width:120px; max-height:80px;"/> <span>${info.aContextSimple }</span>
+										</div>
+										
 									</div>
-								</div>
-								<div class="qiye-item">
-									<p>
-										<a href="#">四川蒙顶山跃华茶业集团有限公司</a>
-									</p>
-									<div class="qiye-item-dl">
-										<img src="images/item1.jpg" alt="" /> <span>跃华集团始建于1994年，经过十多年的传承积累，开拓奋进，现今已成为省级扶贫龙头企业</span>
-									</div>
-								</div>
-								<div class="qiye-item">
-									<p>
-										<a href="#">四川蒙顶山跃华茶业集团有限公司</a>
-									</p>
-									<div class="qiye-item-dl">
-										<img src="images/item1.jpg" alt="" /> <span>跃华集团始建于1994年，经过十多年的传承积累，开拓奋进，现今已成为省级扶贫龙头企业</span>
-									</div>
-								</div>
-								<div class="qiye-item">
-									<p>
-										<a href="#">四川蒙顶山跃华茶业集团有限公司</a>
-									</p>
-									<div class="qiye-item-dl">
-										<img src="images/item1.jpg" alt="" /> <span>跃华集团始建于1994年，经过十多年的传承积累，开拓奋进，现今已成为省级扶贫龙头企业</span>
-									</div>
-								</div>
+								</c:forEach>
 							</div>
 						</div>
 					</div>
@@ -302,31 +214,20 @@
 						<!--栏目名字-->
 						<div class="lm_title clearfix" style="padding-top: 20px;">
 							<div class="main-tit">
-								<a href="#">发律法规</a>
+								<a href="<%=basePath%>home/list.do?tId=${titles[3].tId}">${titles[3].tName }</a> 
 							</div>
-							<a class="more" href="#">黑名单</a>
+							<a class="more" href="<%=basePath%>home/list.do?tId=${titles[3].tId}">更多>></a>
 						</div>
 						<!--栏目名字 end-->
 						<div class="lm_rt_content">
 							<ul style="margin-left: 22px;">
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
-								<li class="h34"><a href="#" target="" class="wz_title"
-									title="四川圣康蛋鸡养殖专业合作社">四川圣康蛋鸡养殖专业合作社</a></li>
+								<c:forEach items="${page_3_9 }" var="info">
+									<li class="h34">
+										<a href="<%=basePath%>home/details.do?aId=${info.aId}" target="" title="${info.aTitle }">${info.aTitle }</a>
+									</li>
+								</c:forEach>
+								
+								
 							</ul>
 						</div>
 					</div>
@@ -334,10 +235,8 @@
 			</div>
 			<div class="clearfix"></div>
 		</div>
-	</div>
 	
 	
-</body>
 </body>
 
 

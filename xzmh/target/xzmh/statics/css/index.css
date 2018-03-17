@@ -168,7 +168,7 @@ body,.endword{
 .slide_content .shadow .title{width: 260px; height: 65px;padding-left: 30px;padding-top: 20px;}
 .slide_content .shadow .title a{ text-decoration:none; color:#fff; font-size:14px; font-weight:bolder; overflow:hidden; }
 .slide_content .btn{ position:absolute; bottom:34px; left:510px; overflow:hidden; zoom:1;}
-.slide_content .btn a{position:relative; display:inline; width:13px; height:13px; border-radius:7px; margin:0 5px;color:#B0B0B0;font:12px/15px "\5B8B\4F53"; text-decoration:none; text-align:center; outline:0; float:left; background:#D9D9D9; }
+.slide_content .btn a{position:relative; display:inline; border-radius:7px; margin:0 5px;color:#B0B0B0;font:12px/15px "\5B8B\4F53"; text-decoration:none; text-align:center; outline:0; background:#D9D9D9; }
 .slide_content .btn a:hover,.slide_content .btn a.current{  cursor:pointer;background:#fc114a;}
 .slide_content .slide_pic{ position:absolute; left:0px; top:0px; }
 .slide_content .slide_btn{ overflow:hidden; zoom:1;  height:16px; z-index:10;  }
@@ -227,7 +227,6 @@ body,.endword{
     width: 360px;
 }
 .lm_rt_content ul li a{
-    display: inline-block;
     width: 220px;
     float: left;
     text-overflow:ellipsis; 
@@ -396,14 +395,12 @@ body,.endword{
 }
 .kjrk_link img{
     border:1px solid #ccc;
-    display: inline-block;
     float: left;
     width: 66px;
     height: 66px;
 }
 .pt_link img{
     border:1px solid #ccc;
-    display: inline-block;
     float: left;
     width: 98px;
     height: 98px;
@@ -468,7 +465,7 @@ body,.endword{
     color: #666;
     margin-left: 16px;
 }
-.current_number{
+.fenye .current_number{
     width: 21px;
     height: 21px;
     display: inline-block;
@@ -476,6 +473,10 @@ body,.endword{
     text-align: center;    
     border-radius: 50%;
     background: #1da451;
+    color:#fff;
+}
+.fenye .prov{
+    color:#d3d8dc;
 }
 .detil_top{
     height: 80px;

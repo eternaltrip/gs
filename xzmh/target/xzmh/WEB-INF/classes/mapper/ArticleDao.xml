@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sofn.agriculture_gateway_tibet.dao.ArticleDao">
+
+
+	<sql id="Article_column">
+		aId, aTitle, aAuthor, aSources, aPic, aContextSimple , aContext, titleId, aEnableState, aEnableTop,aEnableHeadline, aHeadlineSort , createTime, updateTime 
+	</sql>
+	<sql id="ArticleTop_column">
+		titleId , sortNum 
+	</sql>
+	
+	<insert id="Article_Add" parameterType="com.sofn.agriculture_gateway_tibet.entity.Article">
+		INSERT INTO
+			 XZMH_ARTICLE(<include refid="Article_column" />)
+		VALUES(
+			#{aId},#{aTitle},#{aAuthor},#{aSources},#{aPic},#{aContextSimple},#{aContext},#{titleId},#{aEnableState},
+			#{aEnableTop},#{aEnableHeadline},#{aHeadlineSort},#{createTime}, #{updateTime}
+			)
+	</insert>
+	
+	
+	<select id="selectArticle" resultType="com.sofn.agriculture_gateway_tibet.entity.Article" parameterType="com.sofn.agriculture_gateway_tibet.entity.Article">
+		SELECT
+			a.aId,
+			a.aTitle,
+			a.aAuthor,
+			a.aSources,
+			a.aPic,
+			a.aContextSimple,
+			a.aContext,
+			a.titleId,
+			t.TNAME as titleName,
+			a.aEnableState,
+			a.aEnableTop,
+			a.aEnableHeadline,
+			a.aHeadlineSort,
+			a.createtime,
+			a.updateTime
+		FROM
+			XZMH_ARTICLE a LEFT JOIN XZMH_TITLE t on a.TITLEID = t.TID
+		WHERE 1=1
+			<if test="aId !=null and aId !='' ">
+				AND a.aId = #{aId}
+			</if>
+			<if test="aTitle !=null and aTitle !='' ">
+				AND a.aTitle like CONCAT(CONCAT('%', #{aTitle, jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="aAuthor !=null and aAuthor !='' ">
+				AND a.aAuthor = #{aAuthor}
+			</if>
+			<if test="aContextSimple !=null and aContextSimple !='' ">
+				AND a.aContextSimple = #{aContextSimple}
+			</if>
+			<if test="aContext !=null and aContext !='' ">
+				AND a.aContext = #{aContext}
+			</if>
+			<if test="titleId !=null and titleId !='' ">
+				AND a.titleId = #{titleId}
+			</if>
+			<if test="aEnableState != null ">
+				AND a.aEnableState = #{aEnableState}
+			</if>
+			<if test="aEnableTop != null ">
+				AND a.aEnableTop = #{aEnableTop}
+			</if>
+			<if test="aEnableHeadline != null  ">
+				AND a.aEnableHeadline = #{aEnableHeadline}
+			</if>
+			<if test="aHeadlineSort != null ">
+				AND a.aHeadlineSort = #{aHeadlineSort}
+			</if>
+			<if test="startTime !=null ">
+				AND <![CDATA[ #{startTime} >= a.updateTime ]]>
+			</if>
+			<if test="endTime !=null">
+				AND <![CDATA[ a.updateTime <= #{endTime} ]]>
+			</if>
+		ORDER BY 
+				aEnableHeadline DESC , aHeadlineSort ,aEnableTop DESC, updateTime DESC
+	</select>
+	
+
+	<update id="Article_Update" parameterType="com.sofn.agriculture_gateway_tibet.entity.Article">
+		UPDATE
+			XZMH_ARTICLE
+		<set>
+			<if test="aTitle !=null and aTitle !='' ">
+				aTitle = #{aTitle},
+			</if>
+			<if test="aAuthor !=null and aAuthor !='' ">
+				aAuthor = #{aAuthor},
+			</if>
+			<if test="aSources !=null and aSources !='' ">
+				aSources = #{aSources},
+			</if>
+			<if test="aPic !=null and aPic !='' ">
+				aPic = #{aPic},
+			</if>
+			<if test="aContextSimple !=null and aContextSimple !='' ">
+				 aContextSimple = #{aContextSimple},
+			</if>
+			<if test="aContext !=null and aContext !='' ">
+				aContext = #{aContext},
+			</if>
+			<if test="titleId !=null and titleId !='' ">
+				titleId = #{titleId},
+			</if>
+			<if test="aEnableState !=null  ">
+				aEnableState = #{aEnableState},
+			</if>
+			<if test="aEnableTop !=null  ">
+				aEnableTop = #{aEnableTop},
+			</if>
+			<if test="aEnableHeadline !=null  ">
+				aEnableHeadline = #{aEnableHeadline},
+			</if>
+			<if test="aHeadlineSort !=null  ">
+				aHeadlineSort = #{aHeadlineSort},
+			</if>
+			<if test="updateTime !=null ">
+				updateTime = #{updateTime},
+			</if>
+		</set>
+		WHERE
+			aId = #{aId}
+	</update>
+
+	<delete id="Article_Delete" parameterType="string">
+		DELETE FROM
+			XZMH_ARTICLE
+		WHERE
+			aId = #{aId}
+	</delete>
+
+
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sofn.agriculture_gateway_tibet.dao.NavigationTitleDao">
+	
+	<sql id="Title_column">
+		tId , tName , tCode , tIndex , tEnableState , tPic ,isUrl , tUrl , createTime ,updateTime
+	</sql>
+	
+	<select id="AllTitles" parameterType="map" resultType="com.sofn.agriculture_gateway_tibet.entity.NavigationTitle">
+		SELECT
+			<include refid="Title_column" />
+		FROM
+			XZMH_TITLE
+		
+		WHERE 1=1 
+				<if test="tId !=null and tId !='' ">
+					AND tId = #{tId}
+				</if>
+				<if test="tName !=null and tName !='' ">
+					AND tName = #{tName}
+				</if>
+				<if test="tCode !=null and tCode !='' ">
+					AND tCode = #{tCode}
+				</if>
+				<if test="tEnableState !=null and tEnableState !='' ">
+					AND tEnableState = #{tEnableState}
+				</if>
+				<if test="startTime !=null and startTime !='' ">
+					AND <![CDATA[startTime >= #{updatetime} ]]>
+				</if>
+				<if test="endTime !=null and endTime !='' ">
+					AND <![CDATA[ #{updatetime}) <= endTime ]]>
+				</if>
+		ORDER BY tIndex
+	</select> 
+	
+	
+	<insert id="addTitle" parameterType="list">
+		INSERT INTO 
+			XZMH_TITLE(<include refid="Title_column" />)
+		VALUES
+			<foreach collection="list" item="item" separator=",">
+				(#{item.tId},#{item.tName},#{item.tCode},#{item.tIndex},
+				#{item.tEnableState}, #{item.tPic}, #{item.isUrl}, #{item.tUrl} , #{item.createTime}, #{item.updateTime})
+			</foreach>
+	</insert>
+	
+	
+	<delete id="deleteTitle" parameterType="string">
+		DELETE FROM
+			XZMH_TITLE
+		WHERE
+			tId = #{tId}
+	</delete>
+	
+	
+	<update id="updateTitle" parameterType="com.sofn.agriculture_gateway_tibet.entity.NavigationTitle">
+		update 
+			XZMH_TITLE
+		<set>
+			
+				<if test="tName !=null and tName !='' ">
+					tName = #{tName},
+				</if>
+				<if test="tCode !=null and tCode !='' ">
+					tCode = #{tCode},
+				</if>
+				<if test="tIndex !=null and tIndex !='' ">
+					tIndex = #{tIndex},
+				</if>
+				<if test="tEnableState !=null "><!-- mybaits 中字段如果是int类型，那么0会被认为是空 -->
+					tEnableState = #{tEnableState},
+				</if>
+				<if test="tPic !=null and tPic !='' ">
+					tPic = #{tPic},
+				</if>
+				
+				<if test="isUrl !=null ">
+					isUrl = #{isUrl},
+				</if>
+				
+				<if test="tUrl !=null and tUrl !='' ">
+					tUrl = #{tUrl},
+				</if>
+				
+				<if test="updateTime !=null "><!-- mybaits 中字段如果是date类型，进行!=''判断就会发生异常 -->
+					updateTime = #{updateTime},
+				</if>
+			
+		</set>
+		WHERE
+			tId = #{tId}
+	</update>
+	
+	
+</mapper>
